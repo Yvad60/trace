@@ -1,4 +1,4 @@
-# POC 3 — Reconciliation
+# POC — Reconciliation
 
 **Goal:** Verify that SMS transactions can be matched against statement transactions.
 

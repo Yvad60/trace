@@ -1,4 +1,4 @@
-# POC 1 — Android SMS Capture: Results
+# POC — Android SMS Capture: Results
 
 **Code reference**: https://github.com/Yvad60/gymnasium/tree/sms-reader
 

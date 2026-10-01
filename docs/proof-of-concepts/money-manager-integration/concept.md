@@ -1,4 +1,4 @@
-# POC 3 — Money Manager Integration
+# POC — Money Manager Integration
 
 **Goal:** Verify that verified Trace transactions can be transferred into a dedicated Money Manager app reliably.
 

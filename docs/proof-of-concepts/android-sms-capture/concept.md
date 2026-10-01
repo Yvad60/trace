@@ -1,4 +1,4 @@
-# POC 1 — Android SMS Capture
+# POC — Android SMS Capture
 
 **Goal:** Verify that our app, running on an Android phone, can reliably capture mobile money and bank transaction SMS.
 

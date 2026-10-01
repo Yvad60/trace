@@ -1,4 +1,4 @@
-# POC 1 — Android SMS Capture: Results
+# POC — Money Manager Integration: Results
 
 **Verdict: confirmed.**
 Introducing [MoneyMatter](https://github.com/letehaha/moneymatter) An open source personal finance manager for the web.

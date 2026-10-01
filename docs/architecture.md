@@ -12,17 +12,14 @@ Trace is split into three main components:
        │
        ▼
 ┌─────────────┐
+│ Self Hosted │
+│ MoneyMatter |
 │   Backend   │
-│  + Database │
 └──────┬──────┘
        │
        ▼
-┌─────────────┐
-│ Web App UI  │
-└──────┬──────┘
-       │
-       ▼
- Money Manager
+Self Hosted MoneyMatter Web App
+
 ```
 
 ## Android
@@ -47,6 +44,8 @@ The central source of truth.
 Responsible for:
 
 - Transaction storage
+- Transaction verification
+- Transaction Track
 - MTN/BK parsing
 - Statement processing
 - Reconciliation
@@ -55,42 +54,6 @@ Responsible for:
 - Synchronization
 - Money Manager integration
 
-Recommended stack:
-
-- NestJS
-- TypeScript
-- PostgreSQL/SQLite
-
 ## Web App
 
-The primary user interface, optimized for laptop use.
-
-Responsible for:
-
-- Transaction browsing
-- Statement uploads
-- Reconciliation
-- Manual review
-- Categorization
-- Rules
-- Reports and synchronization status
-
-Recommended stack:
-
-- Next.js
-- TypeScript
-
-## Money Manager
-
-**Trace is not a Money Manager.** A dedicated Money Manager remains the final accounting application.
-
-Trace communicates with it through a dedicated adapter, so the rest of the system remains independent of the Money Manager implementation.
-
-## Core Principle
-
-```text
-Phone = Capture
-Backend = Source of Truth
-Web = Review
-Money Manager = Accounting Destination
-```
+MoneyMatter will be used as the web app, and it will be self hosted.
