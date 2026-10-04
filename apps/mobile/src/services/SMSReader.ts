@@ -1,4 +1,5 @@
 import {
+  addSmsListener,
   getPermissionStatusAsync,
   getRecentMessages,
   requestPermissionsAsync,
@@ -17,13 +18,23 @@ class SMSReader {
           return [];
         }
       }
-      const messages = await getRecentMessages({});
+      const messages = await getRecentMessages({
+        limit: 5,
+        senderAllowlist: ["MoKash"],
+      });
 
       return messages;
     } catch (error) {
       console.error("Error reading SMS messages:", error);
       return [];
     }
+  }
+
+  async setupSmsListener() {
+    const subscription = addSmsListener((message) => {
+      console.log("New SMS received:", message);
+    });
+    return subscription;
   }
 }
 

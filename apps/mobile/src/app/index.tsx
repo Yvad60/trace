@@ -1,17 +1,35 @@
 import { MaxContentWidth, Spacing } from "@/constants/theme";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SMSReaderClient } from "../services/SMSReader";
 
 export default function HomeScreen() {
+  const [latestSyncTime, setLatestSyncTime] = useState<string>("Monday, January 1, 2024, 12:00 PM");
+
   const handlePress = async () => {
     try {
-      const message = await SMSReaderClient.readSMSMessages();
-      console.log("Recent messages:", message);
+      const messages = await SMSReaderClient.readSMSMessages();
+      console.log("Recent messages:", messages);
     } catch (error) {
       console.error("Error fetching recent messages:", error);
     }
   };
+
+  useEffect(() => {
+    const setupSmsListener = async () => {
+      const subscription = await SMSReaderClient.setupSmsListener();
+      console.log("SMS listener set up:", subscription);
+      return () => {
+        subscription.remove();
+      };
+    };
+
+    setupSmsListener();
+
+    // Clean up the listener when the component unmounts
+    return () => {};
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -19,6 +37,7 @@ export default function HomeScreen() {
         <View style={styles.heroSection}>
           <Text style={styles.title}>Trace</Text>
           <Text style={styles.heroSection}>Let's track some money!</Text>
+          <Text style={styles.sychronizationTime}>Latest sync time: {latestSyncTime}</Text>
         </View>
         <Pressable
           style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
@@ -57,6 +76,11 @@ const styles = StyleSheet.create({
   },
   code: {
     textTransform: "uppercase",
+  },
+  sychronizationTime: {
+    textAlign: "center",
+    fontSize: 12,
+    fontWeight: "500",
   },
   button: {
     backgroundColor: "#1C1C1E",
