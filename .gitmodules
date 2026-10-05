@@ -1,0 +1,3 @@
+[submodule "apps/money-matter"]
+	path = apps/money-matter
+	url = https://github.com/Yvad60/moneymatter.git
