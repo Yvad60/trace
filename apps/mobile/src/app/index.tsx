@@ -2,6 +2,7 @@ import { MaxContentWidth, Spacing } from "@/constants/theme";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import apiClient from "../services/ApiClient";
 import { SMSReaderClient } from "../services/SMSReader";
 
 export default function HomeScreen() {
@@ -9,26 +10,23 @@ export default function HomeScreen() {
 
   const handlePress = async () => {
     try {
-      const messages = await SMSReaderClient.readSMSMessages();
-      console.log("Recent messages:", messages);
+      const transactionSms = await SMSReaderClient.readSMSMessages();
+      await apiClient.sendTransactions(transactionSms);
     } catch (error) {
       console.error("Error fetching recent messages:", error);
     }
   };
 
   useEffect(() => {
-    const setupSmsListener = async () => {
-      const subscription = await SMSReaderClient.setupSmsListener();
-      console.log("SMS listener set up:", subscription);
-      return () => {
-        subscription.remove();
-      };
+    let subscription: { remove: () => void } | undefined;
+
+    SMSReaderClient.setupSmsListener().then((sub) => {
+      subscription = sub;
+    });
+
+    return () => {
+      subscription?.remove();
     };
-
-    setupSmsListener();
-
-    // Clean up the listener when the component unmounts
-    return () => {};
   }, []);
 
   return (
@@ -36,7 +34,7 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.heroSection}>
           <Text style={styles.title}>Trace</Text>
-          <Text style={styles.heroSection}>Let's track some money!</Text>
+          <Text style={styles.subtitle}>Let's track some money!</Text>
           <Text style={styles.sychronizationTime}>Latest sync time: {latestSyncTime}</Text>
         </View>
         <Pressable
@@ -74,8 +72,8 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
   },
-  code: {
-    textTransform: "uppercase",
+  subtitle: {
+    textAlign: "center",
   },
   sychronizationTime: {
     textAlign: "center",

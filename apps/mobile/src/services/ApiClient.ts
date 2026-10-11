@@ -1,16 +1,29 @@
+import { type TransactionSmsMessages } from "./SMSReader";
+
 class ApiClient {
-  protected BASE_URL_: string = "/api";
-  constructor() {}
+  private readonly baseUrl = "http://172.18.2.16:8083/api/v1";
 
   async getLatestSynchronizationTime(): Promise<string> {
-    return fetch(`${this.BASE_URL_}/sync/latest-time`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch latest synchronization time");
-        }
-        return response.json();
-      })
-      .then((data) => data.latestTime);
+    const response = await fetch(`${this.baseUrl}/sync/latest-time`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch latest synchronization time");
+    }
+    const data = await response.json();
+    return data.latestTime;
+  }
+
+  async sendTransactions(smsTransactions: TransactionSmsMessages) {
+    const response = await fetch(`${this.baseUrl}/trace/migrate-sms-transactions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(smsTransactions),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to migrate SMS transactions");
+    }
+    return response.json();
   }
 }
 
