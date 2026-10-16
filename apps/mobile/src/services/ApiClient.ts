@@ -1,16 +1,31 @@
 import { type TransactionSmsMessages } from "./SMSReader";
 
+function requireEnvVar(name: string, value: string | undefined): string {
+  if (!value) {
+    throw new Error(`${name} is not set. Check your .env files.`);
+  }
+  return value;
+}
+
 class ApiClient {
-  private readonly baseUrl = (() => {
-    const url = process.env.EXPO_PUBLIC_API_BASE_URL;
-    if (!url) {
-      throw new Error("EXPO_PUBLIC_API_BASE_URL is not set. Check your .env files.");
-    }
-    return url;
-  })();
+  private readonly baseUrl = requireEnvVar(
+    "EXPO_PUBLIC_API_BASE_URL",
+    process.env.EXPO_PUBLIC_API_BASE_URL,
+  );
+  private readonly apiKey = requireEnvVar("EXPO_PUBLIC_API_KEY", process.env.EXPO_PUBLIC_API_KEY);
+
+  private request(path: string, init: RequestInit = {}): Promise<Response> {
+    return fetch(`${this.baseUrl}${path}`, {
+      ...init,
+      headers: {
+        ...init.headers,
+        "X-API-Key": this.apiKey,
+      },
+    });
+  }
 
   async getLatestSynchronizationTime(): Promise<string> {
-    const response = await fetch(`${this.baseUrl}/sync/latest-time`);
+    const response = await this.request("/sync/latest-time");
     if (!response.ok) {
       throw new Error("Failed to fetch latest synchronization time");
     }
@@ -19,7 +34,7 @@ class ApiClient {
   }
 
   async sendTransactions(smsTransactions: TransactionSmsMessages) {
-    const response = await fetch(`${this.baseUrl}/trace/migrate-sms-transactions`, {
+    const response = await this.request("/trace/migrate-sms-transactions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
