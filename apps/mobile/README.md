@@ -35,6 +35,17 @@ npm run reset-project
 
 This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
+### Environment variables
+
+This app is single-user, so there are no shared, committed defaults — only
+`.env.example` is checked in, as a template. Create your own local files
+(gitignored, never shared) before running the app:
+
+- `.env.development.local` — used by `pnpm android` / `npx expo start` (debug builds)
+- `.env.production.local` — used by `pnpm android:release` (release builds)
+
+Copy `.env.example` to whichever of those you need and fill in the real values.
+
 ### Other setup steps
 
 - To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)

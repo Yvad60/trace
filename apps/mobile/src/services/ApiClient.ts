@@ -1,7 +1,13 @@
 import { type TransactionSmsMessages } from "./SMSReader";
 
 class ApiClient {
-  private readonly baseUrl = "http://172.18.2.16:8083/api/v1";
+  private readonly baseUrl = (() => {
+    const url = process.env.EXPO_PUBLIC_API_BASE_URL;
+    if (!url) {
+      throw new Error("EXPO_PUBLIC_API_BASE_URL is not set. Check your .env files.");
+    }
+    return url;
+  })();
 
   async getLatestSynchronizationTime(): Promise<string> {
     const response = await fetch(`${this.baseUrl}/sync/latest-time`);
